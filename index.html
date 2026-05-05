@@ -97,6 +97,26 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080614;font-family:
 /* ── Spirit creature — drifting soul orb ── */
 .spirit{position:absolute;pointer-events:none;border-radius:50%}
 
+/* ── Fairy ── */
+.fairy-wrap{position:absolute;pointer-events:none}
+.fairy-core{
+  position:relative;border-radius:50%;z-index:1;
+  animation:fairy-pulse 1.8s ease-in-out infinite alternate;
+}
+.fairy-wings{
+  position:absolute;border-radius:50%;
+  transform:translate(-50%,-50%);
+  animation:wing-flutter 0.55s ease-in-out infinite alternate;
+}
+@keyframes fairy-pulse{
+  0%  {transform:scale(0.8);filter:brightness(0.85)}
+  100%{transform:scale(1.55);filter:brightness(1.3)}
+}
+@keyframes wing-flutter{
+  0%  {transform:translate(-50%,-50%) scaleX(1)   scaleY(1);  opacity:0.55}
+  100%{transform:translate(-50%,-50%) scaleX(1.45) scaleY(0.55);opacity:0.2}
+}
+
 @keyframes nebula-drift{
   0%  {transform:translate(0px,0px) scale(1)}
   33% {transform:translate(18px,-22px) scale(1.06)}
@@ -1091,6 +1111,75 @@ function spawnSpirit() {
 }
 for (let i = 0; i < 3; i++) setTimeout(spawnSpirit, i * 3000);
 setInterval(spawnSpirit, 8000);
+
+// ─── Fairies ──────────────────────────────────────────────────────────────
+const FAIRY_PAL = [
+  { bg:'rgba(255,248,220,0.95)', s1:'rgba(255,220,100,0.75)', s2:'rgba(255,180,60,0.28)',  wing:'rgba(255,220,140,0.18)' },
+  { bg:'rgba(220,240,255,0.95)', s1:'rgba(140,220,255,0.75)', s2:'rgba(80,180,255,0.28)',  wing:'rgba(140,220,255,0.15)' },
+  { bg:'rgba(245,220,255,0.95)', s1:'rgba(200,140,255,0.70)', s2:'rgba(160,80,230,0.25)',  wing:'rgba(200,160,255,0.16)' },
+  { bg:'rgba(220,255,240,0.95)', s1:'rgba(100,230,180,0.65)', s2:'rgba(60,200,150,0.25)',  wing:'rgba(120,230,190,0.15)' },
+  { bg:'rgba(255,230,240,0.95)', s1:'rgba(255,160,200,0.65)', s2:'rgba(220,80,140,0.22)',  wing:'rgba(255,180,210,0.14)' },
+];
+
+function spawnFairy() {
+  if (document.querySelectorAll('.fairy-wrap').length >= 9) return;
+
+  const p   = FAIRY_PAL[Math.floor(Math.random() * FAIRY_PAL.length)];
+  const sz  = 4 + Math.random() * 4.5;            // 4–8.5 px
+
+  const wrap = document.createElement('div');
+  wrap.className = 'fairy-wrap';
+
+  // Wings (behind core)
+  const wings = document.createElement('div');
+  wings.className = 'fairy-wings';
+  const wSz = sz * 5.5;
+  wings.style.cssText =
+    `width:${wSz}px;height:${sz * 2.2}px;top:${sz/2}px;left:${sz/2}px;` +
+    `background:radial-gradient(ellipse,${p.wing} 0%,transparent 68%);` +
+    `animation-duration:${(0.4 + Math.random() * 0.35).toFixed(2)}s`;
+
+  // Glowing core
+  const core = document.createElement('div');
+  core.className = 'fairy-core';
+  core.style.cssText =
+    `width:${sz}px;height:${sz}px;` +
+    `background:${p.bg};` +
+    `box-shadow:0 0 ${sz*2}px ${sz}px ${p.s1},0 0 ${sz*5}px ${sz*2.5}px ${p.s2};` +
+    `animation-duration:${(1.0 + Math.random() * 1.0).toFixed(1)}s`;
+
+  wrap.appendChild(wings);
+  wrap.appendChild(core);
+  document.getElementById('fantasy-bg').appendChild(wrap);
+
+  // Spawn only in side bands (left 27% or right 27%) so tree stays clear
+  const onLeft = Math.random() < 0.5;
+  const sx = onLeft
+    ? window.innerWidth * (0.01 + Math.random() * 0.26)
+    : window.innerWidth * (0.73 + Math.random() * 0.26);
+  const sy = window.innerHeight * (0.08 + Math.random() * 0.76);
+  const dx = sx + (Math.random() - 0.5) * 300;
+  const dy = sy - 70 - Math.random() * 270;
+  const dur = 14 + Math.random() * 14;
+  const amp = 9  + Math.random() * 18;   // flutter x-amplitude
+  const spd = (0.6 + Math.random() * 1.3) * Math.PI * 2;
+  const t0  = Date.now();
+
+  gsap.set(wrap, { x: sx, y: sy, opacity: 0 });
+
+  const tl = gsap.timeline({ onComplete: () => wrap.remove() });
+  tl.to(wrap, { opacity: 0.72, duration: 2.2, ease: 'power1.in' });
+  tl.to(wrap, {
+    x: dx, y: dy, duration: dur, ease: 'sine.inOut',
+    modifiers: {
+      x: v => (parseFloat(v) + Math.sin((Date.now() - t0) * 0.001 * spd) * amp) + 'px'
+    }
+  }, '<');
+  tl.to(wrap, { opacity: 0, duration: 2.5, ease: 'power1.out' }, `-=2.5`);
+}
+
+for (let i = 0; i < 5; i++) setTimeout(spawnFairy, i * 1200);
+setInterval(spawnFairy, 3200);
 
 initIntro();
 </script>
