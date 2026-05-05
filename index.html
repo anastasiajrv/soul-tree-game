@@ -52,6 +52,51 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080614;font-family:
   animation:fog-breathe 12s ease-in-out infinite alternate;
 }
 
+/* ── Aurora borealis ribbons ── */
+#fantasy-bg .aurora{
+  position:absolute;top:0;left:-10%;width:120%;pointer-events:none;
+}
+#fantasy-bg .aurora-1{
+  height:28vh;
+  background:linear-gradient(180deg,rgba(60,180,140,0.18) 0%,rgba(100,60,200,0.14) 50%,transparent 100%);
+  filter:blur(22px);
+  animation:aurora-wave 14s ease-in-out infinite alternate;
+}
+#fantasy-bg .aurora-2{
+  height:22vh;
+  background:linear-gradient(180deg,rgba(40,120,200,0.12) 0%,rgba(160,60,180,0.10) 60%,transparent 100%);
+  filter:blur(30px);
+  animation:aurora-wave 20s ease-in-out infinite alternate-reverse;
+  animation-delay:-7s;
+}
+#fantasy-bg .aurora-3{
+  height:18vh;
+  background:linear-gradient(180deg,rgba(80,220,180,0.08) 0%,rgba(60,100,220,0.07) 70%,transparent 100%);
+  filter:blur(18px);
+  animation:aurora-wave 17s ease-in-out infinite alternate;
+  animation-delay:-3s;
+}
+
+/* ── Shooting star ── */
+.shooting-star{
+  position:absolute;pointer-events:none;
+  width:3px;height:3px;border-radius:50%;
+  background:#fff;
+}
+.shooting-star::after{
+  content:'';position:absolute;top:50%;right:3px;
+  transform:translateY(-50%) rotate(180deg);
+  width:140px;height:1.5px;
+  background:linear-gradient(90deg,rgba(255,255,255,0.9),rgba(168,232,255,0.4),transparent);
+  transform-origin:left center;
+}
+
+/* ── Floating wisp ── */
+.bg-wisp{position:absolute;pointer-events:none;border-radius:50%;mix-blend-mode:screen}
+
+/* ── Spirit creature — drifting soul orb ── */
+.spirit{position:absolute;pointer-events:none;border-radius:50%}
+
 @keyframes nebula-drift{
   0%  {transform:translate(0px,0px) scale(1)}
   33% {transform:translate(18px,-22px) scale(1.06)}
@@ -70,6 +115,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080614;font-family:
 @keyframes fog-breathe{
   0%  {opacity:0.7;transform:scaleX(1)}
   100%{opacity:1;transform:scaleX(1.04)}
+}
+@keyframes aurora-wave{
+  0%  {transform:translateX(0%) scaleY(1);opacity:0.7;filter:blur(22px) hue-rotate(0deg)}
+  33% {transform:translateX(4%) scaleY(1.3);opacity:1;filter:blur(26px) hue-rotate(25deg)}
+  66% {transform:translateX(-3%) scaleY(0.85);opacity:0.8;filter:blur(20px) hue-rotate(-15deg)}
+  100%{transform:translateX(6%) scaleY(1.15);opacity:0.9;filter:blur(24px) hue-rotate(40deg)}
 }
 
 .screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;background:transparent;opacity:0;pointer-events:none;transition:none;z-index:1}
@@ -229,6 +280,9 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
   <div class="nebula nebula-2"></div>
   <div class="nebula nebula-3"></div>
   <div class="nebula nebula-4"></div>
+  <div class="aurora aurora-1"></div>
+  <div class="aurora aurora-2"></div>
+  <div class="aurora aurora-3"></div>
   <div class="stars" id="starField"></div>
   <div class="shimmer-veil"></div>
   <div class="fog"></div>
@@ -943,6 +997,100 @@ function finalBurst3() {
     field.appendChild(s);
   });
 })();
+
+// ─── Shooting stars ──────────────────────────────────────────────────────
+function spawnShootingStar() {
+  const el = document.createElement('div');
+  el.className = 'shooting-star';
+  const x = 5 + Math.random() * 65;
+  const y = 2 + Math.random() * 35;
+  el.style.left = x + '%';
+  el.style.top  = y + '%';
+  el.style.opacity = '0';
+  document.getElementById('fantasy-bg').appendChild(el);
+
+  const dist = 260 + Math.random() * 180;
+  const angle = 30 + Math.random() * 20; // degrees below horizontal
+  const rad = angle * Math.PI / 180;
+  gsap.fromTo(el,
+    { x: 0, y: 0, opacity: 0, scale: 1 },
+    { x: Math.cos(rad) * dist, y: Math.sin(rad) * dist,
+      opacity: [0, 1, 1, 0], scale: [1, 1, 0.3],
+      duration: 0.6 + Math.random() * 0.35, ease: 'power2.in',
+      onComplete: () => el.remove() }
+  );
+}
+(function scheduleShooter() {
+  setTimeout(() => { spawnShootingStar(); scheduleShooter(); },
+    2500 + Math.random() * 7000);
+})();
+
+// ─── Floating wisps (rising firefly-souls) ───────────────────────────────
+const WISP_COLORS = [
+  'rgba(168,232,255,', 'rgba(200,160,255,', 'rgba(255,220,140,',
+  'rgba(140,255,200,', 'rgba(220,180,255,'
+];
+function spawnWisp() {
+  const el = document.createElement('div');
+  el.className = 'bg-wisp';
+  const sz  = 3 + Math.random() * 9;
+  const col = WISP_COLORS[Math.floor(Math.random() * WISP_COLORS.length)];
+  const hi  = 0.55 + Math.random() * 0.35;
+  el.style.cssText =
+    `width:${sz}px;height:${sz}px;` +
+    `left:${5 + Math.random() * 90}%;` +
+    `bottom:${8 + Math.random() * 25}%;` +
+    `background:${col}${hi});` +
+    `box-shadow:0 0 ${sz * 3}px ${sz * 1.5}px ${col}${hi * 0.35});` +
+    `filter:blur(${sz > 7 ? 1.5 : 0.5}px);`;
+  document.getElementById('fantasy-bg').appendChild(el);
+
+  const dur   = 9 + Math.random() * 10;
+  const drift = (Math.random() - 0.5) * 180;
+  gsap.fromTo(el,
+    { y: 0, x: 0, opacity: 0 },
+    { y: -(window.innerHeight * (0.35 + Math.random() * 0.45)),
+      x: drift, opacity: [0, hi, hi * 0.8, 0],
+      duration: dur, ease: 'sine.inOut',
+      onComplete: () => el.remove() }
+  );
+}
+for (let i = 0; i < 6; i++) setTimeout(spawnWisp, i * 900);
+setInterval(spawnWisp, 2200);
+
+// ─── Spirit creatures — large drifting soul orbs ─────────────────────────
+const SPIRIT_COLORS = [
+  ['rgba(168,232,255,0.18)', 'rgba(168,232,255,0.06)'],
+  ['rgba(200,160,255,0.15)', 'rgba(200,160,255,0.05)'],
+  ['rgba(255,210,120,0.13)', 'rgba(255,210,120,0.04)'],
+  ['rgba(120,220,200,0.14)', 'rgba(120,220,200,0.05)'],
+];
+function spawnSpirit() {
+  const el  = document.createElement('div');
+  el.className = 'spirit';
+  const sz  = 60 + Math.random() * 100;
+  const pair = SPIRIT_COLORS[Math.floor(Math.random() * SPIRIT_COLORS.length)];
+  const startX = Math.random() * (window.innerWidth - sz);
+  const startY = window.innerHeight * (0.1 + Math.random() * 0.7);
+  el.style.cssText =
+    `width:${sz}px;height:${sz}px;` +
+    `left:${startX}px;top:${startY}px;` +
+    `background:radial-gradient(circle,${pair[0]} 0%,${pair[1]} 50%,transparent 70%);` +
+    `filter:blur(${10 + sz * 0.08}px);`;
+  document.getElementById('fantasy-bg').appendChild(el);
+
+  const dur   = 18 + Math.random() * 16;
+  const destX = startX + (Math.random() - 0.5) * 350;
+  const destY = startY - 80 - Math.random() * 200;
+  gsap.fromTo(el,
+    { opacity: 0, x: 0, y: 0 },
+    { opacity: [0, 1, 0.85, 0], x: destX - startX, y: destY - startY,
+      duration: dur, ease: 'sine.inOut',
+      onComplete: () => el.remove() }
+  );
+}
+for (let i = 0; i < 3; i++) setTimeout(spawnSpirit, i * 3000);
+setInterval(spawnSpirit, 8000);
 
 initIntro();
 </script>
