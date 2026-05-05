@@ -109,12 +109,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080614;font-family:
   animation:wing-flutter 0.55s ease-in-out infinite alternate;
 }
 @keyframes fairy-pulse{
-  0%  {transform:scale(0.8);filter:brightness(0.85)}
-  100%{transform:scale(1.55);filter:brightness(1.3)}
+  0%  {transform:scale(0.75);filter:brightness(0.65);opacity:0.45}
+  38% {transform:scale(1.2); filter:brightness(1.05);opacity:0.8}
+  44% {transform:scale(1.4); filter:brightness(2.4); opacity:1}
+  52% {transform:scale(1.25);filter:brightness(1.1); opacity:0.82}
+  100%{transform:scale(0.75);filter:brightness(0.65);opacity:0.45}
 }
 @keyframes wing-flutter{
-  0%  {transform:translate(-50%,-50%) scaleX(1)   scaleY(1);  opacity:0.55}
-  100%{transform:translate(-50%,-50%) scaleX(1.45) scaleY(0.55);opacity:0.2}
+  0%  {transform:translate(-50%,-50%) scaleX(1)    scaleY(1);   opacity:0.4}
+  100%{transform:translate(-50%,-50%) scaleX(1.35) scaleY(0.6); opacity:0.15}
 }
 
 @keyframes nebula-drift{
@@ -1137,7 +1140,7 @@ function spawnFairy() {
   wings.style.cssText =
     `width:${wSz}px;height:${sz * 2.2}px;top:${sz/2}px;left:${sz/2}px;` +
     `background:radial-gradient(ellipse,${p.wing} 0%,transparent 68%);` +
-    `animation-duration:${(0.4 + Math.random() * 0.35).toFixed(2)}s`;
+    `animation-duration:${(1.6 + Math.random() * 1.8).toFixed(2)}s`;
 
   // Glowing core
   const core = document.createElement('div');
@@ -1146,7 +1149,7 @@ function spawnFairy() {
     `width:${sz}px;height:${sz}px;` +
     `background:${p.bg};` +
     `box-shadow:0 0 ${sz*2}px ${sz}px ${p.s1},0 0 ${sz*5}px ${sz*2.5}px ${p.s2};` +
-    `animation-duration:${(1.0 + Math.random() * 1.0).toFixed(1)}s`;
+    `animation:fairy-pulse ${(3.0 + Math.random() * 2.5).toFixed(1)}s ease-in-out infinite;`;
 
   wrap.appendChild(wings);
   wrap.appendChild(core);
@@ -1158,28 +1161,28 @@ function spawnFairy() {
     ? window.innerWidth * (0.01 + Math.random() * 0.26)
     : window.innerWidth * (0.73 + Math.random() * 0.26);
   const sy = window.innerHeight * (0.08 + Math.random() * 0.76);
-  const dx = sx + (Math.random() - 0.5) * 300;
-  const dy = sy - 70 - Math.random() * 270;
-  const dur = 14 + Math.random() * 14;
-  const amp = 9  + Math.random() * 18;   // flutter x-amplitude
-  const spd = (0.6 + Math.random() * 1.3) * Math.PI * 2;
+  const dx = sx + (Math.random() - 0.5) * 110;   // gentle drift, not rushing across screen
+  const dy = sy - 30 - Math.random() * 130;
+  const dur = 30 + Math.random() * 25;             // 30-55s — slow and dreamy
+  const amp = 4  + Math.random() * 7;              // subtle side wobble
+  const spd = (0.15 + Math.random() * 0.25) * Math.PI * 2;  // slow oscillation
   const t0  = Date.now();
 
   gsap.set(wrap, { x: sx, y: sy, opacity: 0 });
 
   const tl = gsap.timeline({ onComplete: () => wrap.remove() });
-  tl.to(wrap, { opacity: 0.72, duration: 2.2, ease: 'power1.in' });
+  tl.to(wrap, { opacity: 0.52, duration: 5, ease: 'power1.in' });
   tl.to(wrap, {
-    x: dx, y: dy, duration: dur, ease: 'sine.inOut',
+    x: dx, y: dy, duration: dur, ease: 'none',
     modifiers: {
       x: v => (parseFloat(v) + Math.sin((Date.now() - t0) * 0.001 * spd) * amp) + 'px'
     }
   }, '<');
-  tl.to(wrap, { opacity: 0, duration: 2.5, ease: 'power1.out' }, `-=2.5`);
+  tl.to(wrap, { opacity: 0, duration: 5, ease: 'power1.out' }, `-=5`);
 }
 
-for (let i = 0; i < 5; i++) setTimeout(spawnFairy, i * 1200);
-setInterval(spawnFairy, 3200);
+for (let i = 0; i < 4; i++) setTimeout(spawnFairy, i * 2500);
+setInterval(spawnFairy, 6000);
 
 initIntro();
 </script>
