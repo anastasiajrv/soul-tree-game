@@ -351,7 +351,7 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 
 <!-- ═══════════════ SCREEN 0 ═══════════════ -->
 <div class="screen" id="s0">
-  <div class="tree-layer tree-click" id="tree0" style="animation:tree-breathe 6s ease-in-out infinite;opacity:0.92;bottom:-14%" onclick="goToScreen(1)"></div>
+  <div class="tree-layer tree-click" id="tree0" style="opacity:0.92;bottom:-14%" onclick="goToScreen(1)"></div>
   <div class="ui-top" id="s0ui" style="pointer-events:none">
     <h1 class="serif" id="s0t" style="opacity:0;transform:translateY(30px)">This is the Tree of Souls</h1>
     <p class="sub-text" id="s0s" style="opacity:0;transform:translateY(20px)">Every branch is one of us — each person at Alconost, alive in this tree.<br><br>When someone is thanked out loud, their branch lights up. Not just for them — for everyone. That's what recognition does. It makes the invisible, visible</p>
@@ -361,7 +361,7 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 
 <!-- ═══════════════ SCREEN 1 ═══════════════ -->
 <div class="screen" id="s1">
-  <div class="tree-layer" id="tree1" style="animation:tree-breathe 6s ease-in-out infinite;opacity:0.7"></div>
+  <div class="tree-layer" id="tree1" style="opacity:0.7"></div>
   <div class="ui-top" id="s1ui">
     <h2 class="serif" id="s1h" style="opacity:0">Every Alconostian is a light in the tree</h2>
     <p class="sub-text" id="s1p" style="opacity:0">Tap each spark to see how recognition shapes the Tree of Souls</p>
@@ -375,7 +375,7 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 
 <!-- ═══════════════ SCREEN 2 ═══════════════ -->
 <div class="screen" id="s2">
-  <div class="tree-layer" id="tree2" style="animation:tree-breathe 6s ease-in-out infinite;opacity:0.55;filter:grayscale(80%) brightness(0.35)"></div>
+  <div class="tree-layer" id="tree2" style="opacity:0.55;filter:grayscale(80%) brightness(0.35)"></div>
   <div class="ui-top" id="s2ui">
     <h2 class="serif" id="s2h" style="opacity:0">Lately our tree has gone quiet and the lights have faded</h2>
     <p class="sub-text" id="s2p" style="opacity:0">Take a look at the numbers. Tap each one</p>
@@ -391,11 +391,11 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 <div class="screen" id="s3">
 
   <!-- Dark tree: starts dim, brightens with each drop -->
-  <div class="tree-layer" id="tree3-dark" style="animation:tree-breathe 6s ease-in-out infinite;opacity:1;filter:brightness(0.38)">
+  <div class="tree-layer" id="tree3-dark" style="opacity:1;filter:brightness(0.38)">
     <img src="tree-dark.png" alt="Soul Tree dark" draggable="false">
   </div>
   <!-- Bright tree: revealed after all 7 drops -->
-  <div class="tree-layer" id="tree3-bright" style="animation:tree-breathe 6s ease-in-out infinite;opacity:0;filter:brightness(1.25)">
+  <div class="tree-layer" id="tree3-bright" style="opacity:0;filter:brightness(1.25)">
     <img src="tree.png" alt="Soul Tree bright" draggable="false">
   </div>
 
@@ -1199,6 +1199,46 @@ function spawnFairy() {
 
 for (let i = 0; i < 4; i++) setTimeout(spawnFairy, i * 2500);
 setInterval(spawnFairy, 6000);
+
+// ─── Tree sparkles (gold + blue glimmer over the tree) ────────────────────
+function spawnTreeSparkle() {
+  const el = document.createElement('div');
+  const isGold = Math.random() < 0.65;
+  const sz = 2 + Math.random() * 3.5;
+
+  const zone = Math.random();
+  let x, y;
+  if (zone < 0.55) {
+    x = 28 + Math.random() * 44;   // crown
+    y =  8 + Math.random() * 44;
+  } else if (zone < 0.82) {
+    x = 37 + Math.random() * 26;   // trunk glow
+    y = 45 + Math.random() * 33;
+  } else {
+    x = 27 + Math.random() * 46;   // ground flowers
+    y = 73 + Math.random() * 16;
+  }
+
+  const col = isGold ? 'rgba(255,210,55,' : 'rgba(120,205,255,';
+  el.style.cssText =
+    `position:fixed;pointer-events:none;border-radius:50%;z-index:15;` +
+    `width:${sz}px;height:${sz}px;left:${x}%;top:${y}%;` +
+    `background:${col}1);` +
+    `box-shadow:0 0 ${sz*2}px ${sz}px ${col}0.75),0 0 ${sz*5}px ${sz*2.5}px ${col}0.3);`;
+  document.body.appendChild(el);
+
+  gsap.fromTo(el,
+    { scale: 0, opacity: 0 },
+    { scale: 1.3, opacity: 1, duration: 0.22, ease: 'back.out(3)',
+      onComplete: () => gsap.to(el, {
+        scale: 0.15, opacity: 0,
+        duration: 0.65 + Math.random() * 0.9, ease: 'power1.in',
+        onComplete: () => el.remove()
+      })
+    }
+  );
+}
+setInterval(spawnTreeSparkle, 260);
 
 initIntro();
 </script>
