@@ -148,7 +148,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#080614;font-family:
 
 .screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;background:transparent;opacity:0;pointer-events:none;transition:none;z-index:1}
 .screen.active{opacity:1;pointer-events:all;z-index:2}
-.tree-layer{position:absolute;bottom:-4%;left:50%;transform:translateX(-50%);z-index:10;pointer-events:none;width:auto;height:90vh}.tree-layer img{height:100%;width:auto;display:block}
+.tree-layer{position:absolute;bottom:-4%;left:50%;transform:translateX(-50%);z-index:10;pointer-events:none;width:auto;height:90vh;mix-blend-mode:screen}.tree-layer img{height:100%;width:auto;display:block}
 .tree-click{pointer-events:auto!important;cursor:pointer;transition:filter .4s}
 .tree-click:hover img{filter:brightness(1.18) drop-shadow(0 0 40px rgba(168,232,255,0.55)) drop-shadow(0 0 80px rgba(168,232,255,0.25))}
 .tree-hint{position:absolute;bottom:16%;left:50%;transform:translateX(-50%);font-size:13px;letter-spacing:.14em;color:rgba(168,232,255,0.6);z-index:60;pointer-events:none;white-space:nowrap;animation:hint-pulse 2.8s ease-in-out infinite}
