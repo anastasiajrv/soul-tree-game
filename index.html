@@ -204,6 +204,36 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
   0%{transform:scale(1);opacity:0.55}
   100%{transform:scale(2.4);opacity:0}
 }
+/* ── Screen-3 crown dots ── */
+.s3-dot{
+  position:absolute;width:16px;height:16px;border-radius:50%;cursor:pointer;z-index:25;
+  background:radial-gradient(circle,#fff 0%,#FF4DB0 40%,rgba(255,30,140,0.5) 100%);
+  box-shadow:0 0 8px 4px rgba(255,60,160,0.8),0 0 22px 8px rgba(255,0,120,0.45),0 0 40px 14px rgba(255,80,180,0.25);
+  transform:translate(-50%,-50%);
+  animation:dot-bloom 1.9s ease-in-out infinite;
+  pointer-events:all;
+  transition:background .3s,box-shadow .3s;
+}
+.s3-dot::after{
+  content:'';position:absolute;inset:-7px;border-radius:50%;
+  border:1.5px solid rgba(255,60,160,0.45);
+  animation:dot-ripple 1.9s ease-out infinite;
+  pointer-events:none;
+}
+.s3-dot.used{
+  background:radial-gradient(circle,#fffde0 0%,#FFD070 55%,rgba(255,200,80,0.35) 100%);
+  box-shadow:0 0 10px 5px rgba(255,210,80,0.75),0 0 28px 10px rgba(255,180,50,0.4);
+  animation:none;cursor:default;
+}
+.s3-dot.used::after{border-color:rgba(255,200,80,0.35);animation:spark-ripple-gold 2.8s ease-out infinite;}
+@keyframes dot-bloom{
+  0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 8px 4px rgba(255,60,160,0.8),0 0 22px 8px rgba(255,0,120,0.45)}
+  50%{transform:translate(-50%,-50%) scale(1.35);box-shadow:0 0 14px 7px rgba(255,60,160,1),0 0 36px 14px rgba(255,0,120,0.65),0 0 56px 20px rgba(255,80,180,0.35)}
+}
+@keyframes dot-ripple{
+  0%{transform:scale(1);opacity:0.7}
+  100%{transform:scale(2.6);opacity:0}
+}
 .speech-bubble{position:absolute;background:rgba(255,255,255,0.88);border:1px solid rgba(180,100,160,0.35);border-radius:14px;padding:12px 15px;width:185px;z-index:30;pointer-events:none;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 4px 32px rgba(0,0,0,0.45)}
 .speech-bubble::after{content:'';position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:9px solid rgba(168,232,255,0.4)}
 .speech-bubble .b-emoji{font-size:20px;display:block;margin-bottom:6px}
@@ -252,7 +282,7 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 .badge-s3-bar{height:3px;width:100%}
 .badge-s3-body{padding:10px 11px 11px}
 .badge-s3-emoji{font-size:20px;display:block;margin-bottom:5px}
-.badge-s3-name{font-size:12px;font-weight:600;color:#F0EDE6}
+.badge-s3-name{font-size:12px;font-weight:600;color:#2E1535}
 .badge-s3-tap{font-size:10px;color:rgba(130,60,110,0.6);margin-top:4px;letter-spacing:.05em;transition:opacity .3s}
 .badge-s3.open .badge-s3-tap{opacity:0;height:0;overflow:hidden;margin:0}
 .badge-s3-desc{font-size:11px;color:rgba(46,21,53,0.72);line-height:1.5;max-height:0;overflow:hidden;opacity:0;transition:max-height .4s ease,opacity .35s ease .05s,margin-top .4s}
@@ -390,23 +420,23 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 <!-- ═══════════════ SCREEN 3 — Open badges + Drag to tree (combined) ═══════════════ -->
 <div class="screen" id="s3">
 
-  <!-- Dark tree: starts dim, brightens with each drop -->
-  <div class="tree-layer" id="tree3-dark" style="opacity:1;filter:brightness(0.38)">
+  <!-- Dark tree: starts dim, brightens with each drop — right-aligned -->
+  <div class="tree-layer" id="tree3-dark" style="opacity:1;filter:brightness(0.38);left:auto;right:-2%;transform:none;">
     <img src="tree-dark.png" alt="Soul Tree dark" draggable="false">
   </div>
   <!-- Bright tree: revealed after all 7 drops -->
-  <div class="tree-layer" id="tree3-bright" style="opacity:0;filter:brightness(1.25)">
+  <div class="tree-layer" id="tree3-bright" style="opacity:0;filter:brightness(1.25);left:auto;right:-2%;transform:none;">
     <img src="tree.png" alt="Soul Tree bright" draggable="false">
   </div>
 
-  <!-- Drop zone (centred over tree canopy) -->
-  <div id="dropZone" style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:38%;height:72%;z-index:15;border-radius:50% 50% 0 0/30% 30% 0 0;pointer-events:all;border:1.5px solid transparent;transition:background .3s,border-color .3s;"></div>
+  <!-- Drop zone over tree canopy (right side) -->
+  <div id="dropZone" style="position:absolute;right:-2%;bottom:0;left:auto;transform:none;width:52%;height:72%;z-index:15;border-radius:50% 50% 0 0/30% 30% 0 0;pointer-events:all;border:1.5px solid transparent;transition:background .3s,border-color .3s;"></div>
 
-  <!-- Left column: badges 0-3 -->
-  <div id="s3ColLeft" style="position:absolute;left:13%;top:14%;width:160px;display:flex;flex-direction:column;gap:6px;z-index:20;"></div>
+  <!-- Badge col A (badges 0–3) — left zone -->
+  <div id="s3ColLeft" style="position:absolute;left:3%;top:16%;width:155px;display:flex;flex-direction:column;gap:8px;z-index:20;"></div>
 
-  <!-- Right column: badges 4-6 -->
-  <div id="s3ColRight" style="position:absolute;right:12%;top:20%;width:160px;display:flex;flex-direction:column;gap:6px;z-index:20;"></div>
+  <!-- Badge col B (badges 4–6) — left zone, second column -->
+  <div id="s3ColRight" style="position:absolute;left:22%;top:16%;width:155px;display:flex;flex-direction:column;gap:8px;z-index:20;"></div>
 
   <!-- Top UI (badge phase) -->
   <div class="ui-top" id="s3ui">
@@ -733,6 +763,7 @@ function initS3() {
   gsap.to('#s3body', { opacity: 1, duration: 0.7, delay: 0.5 });
 
   buildS3Badges();
+  buildS3Dots();
 }
 
 function buildS3Badges() {
@@ -741,14 +772,12 @@ function buildS3Badges() {
   leftCol.innerHTML  = '';
   rightCol.innerHTML = '';
 
-  // Shuffle badge order so layout feels organic, not alphabetical
-  const shuffled = [...COPY.s3.badges].sort(() => Math.random() - 0.5);
-
-  shuffled.forEach((badge, i) => {
+  // Fixed order — badges always appear in the same slots regardless of tap order
+  COPY.s3.badges.forEach((badge, i) => {
     const card = document.createElement('div');
+    card.id = 's3card-' + i;
     card.className = 'badge-s3 closed';
     card.style.animationDelay = -(i * 0.71) + 's';
-    card.style.marginTop = (Math.random() * 10) + 'px'; // slight scatter within column
     card.innerHTML =
       `<div class="badge-s3-bar" style="background:${badge.color}"></div>` +
       `<div class="badge-s3-body">` +
@@ -759,14 +788,59 @@ function buildS3Badges() {
       `<div class="badge-s3-drag">drag onto tree ✦</div>` +
       `</div>`;
 
+    // Start hidden — revealed by dot click
     card.style.opacity = '0';
-    gsap.to(card, { opacity: 1, duration: 0.4, delay: 0.15 + i * 0.08 });
+    card.style.pointerEvents = 'none';
 
-    card.addEventListener('click', () => openS3Badge(card, badge));
     attachS3Drag(card, badge);
 
     (i <= 3 ? leftCol : rightCol).appendChild(card);
   });
+}
+
+// Dot positions on the tree crown (right-aligned tree, crown roughly x:50–100%, y:15–58%)
+const S3_DOT_POS = [
+  { x:'67%', y:'23%' },
+  { x:'79%', y:'20%' },
+  { x:'60%', y:'32%' },
+  { x:'85%', y:'30%' },
+  { x:'73%', y:'36%' },
+  { x:'63%', y:'44%' },
+  { x:'82%', y:'42%' },
+];
+
+function buildS3Dots() {
+  const s3 = document.getElementById('s3');
+  s3.querySelectorAll('.s3-dot').forEach(d => d.remove());
+
+  COPY.s3.badges.forEach((badge, i) => {
+    const dot = document.createElement('div');
+    dot.className = 's3-dot';
+    dot.style.left = S3_DOT_POS[i].x;
+    dot.style.top  = S3_DOT_POS[i].y;
+    dot.style.animationDelay = (i * 0.27) + 's';
+    dot.style.opacity = '0';
+    gsap.to(dot, { opacity: 1, duration: 0.5, delay: 0.5 + i * 0.12 });
+    dot.addEventListener('click', () => onS3DotClick(i, badge, dot));
+    s3.appendChild(dot);
+  });
+}
+
+function onS3DotClick(i, badge, dot) {
+  if (dot.classList.contains('used')) return;
+  dot.classList.add('used');
+
+  // Burst on dot
+  const rect = dot.getBoundingClientRect();
+  burst(rect.left + rect.width / 2, rect.top + rect.height / 2, {
+    count: 14, colors: [badge.color, '#FF60B0', '#ffffff'], pattern: 'radial'
+  });
+
+  // Reveal and auto-open the badge card
+  const card = document.getElementById('s3card-' + i);
+  card.style.pointerEvents = '';
+  gsap.fromTo(card, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.6)' });
+  openS3Badge(card, badge);
 }
 
 function openS3Badge(card, badge) {
