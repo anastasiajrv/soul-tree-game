@@ -391,7 +391,7 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 
 <!-- ═══════════════ SCREEN 1 ═══════════════ -->
 <div class="screen" id="s1">
-  <div class="tree-layer" id="tree1" style="opacity:0.7;left:auto;right:0;transform:none"></div>
+  <div class="tree-layer" id="tree1" style="opacity:0.92;left:57%;transform:translateX(-50%)"></div>
   <div class="ui-top" id="s1ui">
     <h2 class="serif" id="s1h" style="opacity:0">Every Alconostian is a light in the tree</h2>
     <p class="sub-text" id="s1p" style="opacity:0">Tap each spark to see how recognition shapes the Tree of Souls</p>
@@ -615,13 +615,13 @@ function buildOrbs() {
   const container = document.getElementById('s1orbs');
   container.innerHTML = '';
 
-  // Dots sit on right-side tree crown; bubbles in fixed left columns
+  // Dots on crown (tree at left:57%); bubbles in two left columns, vertically centred
   const SPARK_CFG = [
-    { left:'69%', top:'23%', bLeft:'3%',  bTop:'15%' }, // crown top
-    { left:'60%', top:'32%', bLeft:'3%',  bTop:'35%' }, // crown left
-    { left:'82%', top:'30%', bLeft:'3%',  bTop:'55%' }, // crown right
-    { left:'65%', top:'43%', bLeft:'22%', bTop:'15%' }, // crown mid-left
-    { left:'78%', top:'41%', bLeft:'22%', bTop:'35%' }, // crown mid-right
+    { left:'57%', top:'22%', bLeft:'3%',  bTop:'28%' }, // crown top-centre → col1 row1
+    { left:'47%', top:'32%', bLeft:'3%',  bTop:'46%' }, // crown left       → col1 row2
+    { left:'68%', top:'30%', bLeft:'3%',  bTop:'64%' }, // crown right      → col1 row3
+    { left:'52%', top:'43%', bLeft:'22%', bTop:'37%' }, // crown mid-left   → col2 row1
+    { left:'64%', top:'41%', bLeft:'22%', bTop:'55%' }, // crown mid-right  → col2 row2
   ];
 
   COPY.s1.threads.forEach((thread, i) => {
