@@ -355,7 +355,7 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
   <div class="ui-top" id="s0ui" style="pointer-events:none">
     <h1 class="serif" id="s0t" style="opacity:0;transform:translateY(30px)">This is the Tree of Souls</h1>
     <p class="sub-text" id="s0s" style="opacity:0;transform:translateY(20px)">Every branch is one of us — each person at Alconost, alive in this tree.<br><br>When someone is thanked out loud, their branch lights up. Not just for them — for everyone. That's what recognition does. It makes the invisible, visible</p>
-    <p id="s0tap" style="opacity:0;margin-top:22px;font-size:13px;letter-spacing:.14em;color:rgba(168,232,255,0.65)">Tap the tree</p>
+    <p id="s0tap" style="opacity:0;margin-top:22px;font-size:17px;letter-spacing:.14em;color:rgba(130,40,160,0.9);font-weight:600;text-shadow:0 0 12px rgba(180,80,220,0.35)">Tap the tree</p>
   </div>
 </div>
 
@@ -1025,7 +1025,8 @@ function finalBurst3() {
     const s = document.createElement('div');
     s.className = 'star';
     const isGold = i >= STARS.length - 3;
-    const color  = isGold ? 'rgba(255,220,130,' : 'rgba(200,230,255,';
+    const STAR_PALETTE = ['rgba(180,80,220,','rgba(220,80,160,','rgba(140,60,200,','rgba(200,100,180,'];
+    const color  = isGold ? 'rgba(255,180,80,' : STAR_PALETTE[i % STAR_PALETTE.length];
     s.style.cssText =
       `left:${x}%;top:${y}%;` +
       `width:${sz}px;height:${sz}px;` +
@@ -1066,15 +1067,15 @@ function spawnShootingStar() {
 
 // ─── Floating wisps (rising firefly-souls) ───────────────────────────────
 const WISP_COLORS = [
-  'rgba(168,232,255,', 'rgba(200,160,255,', 'rgba(255,220,140,',
-  'rgba(140,255,200,', 'rgba(220,180,255,'
+  'rgba(200,60,180,', 'rgba(160,60,220,', 'rgba(230,80,150,',
+  'rgba(140,50,210,', 'rgba(210,90,170,'
 ];
 function spawnWisp() {
   const el = document.createElement('div');
   el.className = 'bg-wisp';
   const sz  = 3 + Math.random() * 9;
   const col = WISP_COLORS[Math.floor(Math.random() * WISP_COLORS.length)];
-  const hi  = 0.55 + Math.random() * 0.35;
+  const hi  = 0.70 + Math.random() * 0.25;
   el.style.cssText =
     `width:${sz}px;height:${sz}px;` +
     `left:${5 + Math.random() * 90}%;` +
