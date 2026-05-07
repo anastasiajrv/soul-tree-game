@@ -421,11 +421,11 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 <div class="screen" id="s3">
 
   <!-- Dark tree: starts dim, brightens with each drop -->
-  <div class="tree-layer" id="tree3-dark" style="opacity:1;filter:brightness(0.38)">
+  <div class="tree-layer" id="tree3-dark" style="opacity:1;filter:brightness(0.38);bottom:-14%">
     <img src="tree-dark.png" alt="Soul Tree dark" draggable="false">
   </div>
   <!-- Bright tree: revealed after all 7 drops -->
-  <div class="tree-layer" id="tree3-bright" style="opacity:0;filter:brightness(1.25)">
+  <div class="tree-layer" id="tree3-bright" style="opacity:0;filter:brightness(1.25);bottom:-14%">
     <img src="tree.png" alt="Soul Tree bright" draggable="false">
   </div>
 
@@ -433,20 +433,18 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
   <div id="dropZone" style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:38%;height:72%;z-index:15;border-radius:50% 50% 0 0/30% 30% 0 0;pointer-events:all;border:1.5px solid transparent;transition:background .3s,border-color .3s;"></div>
 
   <!-- Left column: badges 0-3 -->
-  <div id="s3ColLeft" style="position:absolute;left:13%;top:14%;width:160px;display:flex;flex-direction:column;gap:6px;z-index:20;"></div>
+  <div id="s3ColLeft" style="position:absolute;left:4%;top:18%;width:160px;display:flex;flex-direction:column;gap:6px;z-index:20;"></div>
 
   <!-- Right column: badges 4-6 -->
-  <div id="s3ColRight" style="position:absolute;right:12%;top:20%;width:160px;display:flex;flex-direction:column;gap:6px;z-index:20;"></div>
+  <div id="s3ColRight" style="position:absolute;right:4%;top:18%;width:160px;display:flex;flex-direction:column;gap:6px;z-index:20;"></div>
 
   <!-- Top UI (badge phase) -->
   <div class="ui-top" id="s3ui">
-    <h2 class="serif" id="s3h" style="opacity:0">Time to shake things up</h2>
-    <p class="sub-text" id="s3p" style="opacity:0">Meet the new KUDOS — all 7 of them</p>
-    <p class="sub-text" id="s3body" style="opacity:0;margin-top:10px;font-size:clamp(12px,1.4vw,15px);color:rgba(240,237,230,0.58)">The badges have changed. We now have 7 brand new kudos, each one a different way to say: Thank you. Tap each one to find out what it means</p>
+    <h2 class="serif" id="s3h" style="opacity:0">Meet the new KUDOS!</h2>
+    <p class="sub-text" id="s3p" style="opacity:0">The world is changing fast, so our badges had to change too — now we have 7 badges ✨</p>
+    <p class="sub-text" id="s3body" style="opacity:0;margin-top:10px;font-size:clamp(12px,1.4vw,15px);color:rgba(46,21,53,0.72)">Tap to open each one and drag them onto the tree to see what happens to it!</p>
+    <p id="s3dragHint" style="opacity:0;margin-top:10px;font-size:12px;letter-spacing:.10em;color:rgba(130,60,110,0.75);pointer-events:none;animation:hint-pulse 2.8s ease-in-out infinite">Now drag each kudos onto the tree and watch it light up again →</p>
   </div>
-
-  <!-- Drag hint (appears after first badge is opened) -->
-  <div id="s3dragHint" style="position:absolute;bottom:12%;left:50%;transform:translateX(-50%);font-size:12px;letter-spacing:.10em;color:rgba(130,60,110,0.75);pointer-events:none;white-space:nowrap;z-index:60;opacity:0;animation:hint-pulse 2.8s ease-in-out infinite">Now drag each kudos onto the tree and watch it light up again →</div>
 
   <!-- CTA top UI (after all dropped) -->
   <div class="ui-top" id="s3ctaUi" style="opacity:0;pointer-events:none">
@@ -777,9 +775,7 @@ function buildS3Badges() {
   leftCol.innerHTML  = '';
   rightCol.innerHTML = '';
 
-  const shuffled = [...COPY.s3.badges].sort(() => Math.random() - 0.5);
-
-  shuffled.forEach((badge, i) => {
+  COPY.s3.badges.forEach((badge, i) => {
     const card = document.createElement('div');
     card.className = 'badge-s3 closed';
     card.style.animationDelay = -(i * 0.71) + 's';
