@@ -234,10 +234,10 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
   0%{transform:scale(1);opacity:0.7}
   100%{transform:scale(2.6);opacity:0}
 }
-.speech-bubble{position:absolute;background:rgba(255,255,255,0.88);border:1px solid rgba(180,100,160,0.35);border-radius:14px;padding:12px 15px;width:200px;z-index:30;pointer-events:none;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 4px 32px rgba(0,0,0,0.45)}
-.speech-bubble::after{content:'';position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:9px solid rgba(168,232,255,0.4)}
-.speech-bubble .b-emoji{font-size:20px;display:block;margin-bottom:6px}
-.speech-bubble .b-title{font-size:13px;font-weight:600;color:#9B3A7A;margin-bottom:5px}
+.speech-bubble{position:absolute;background:rgba(255,255,255,0.88);border:1px solid rgba(180,100,160,0.35);border-radius:14px;padding:12px 15px;width:200px;height:160px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;z-index:30;pointer-events:none;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 4px 32px rgba(0,0,0,0.45)}
+.speech-bubble .b-header{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:6px}
+.speech-bubble .b-emoji{font-size:16px;line-height:1;flex-shrink:0}
+.speech-bubble .b-title{font-size:13px;font-weight:600;color:#9B3A7A;line-height:1.3}
 .speech-bubble .b-text{font-size:11.5px;color:rgba(46,21,53,0.78);line-height:1.5}
 .stat-card{position:absolute;background:rgba(255,255,255,0.78);border:1px solid rgba(180,100,160,0.25);border-radius:16px;padding:18px 20px;width:240px;min-height:215px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;text-align:center;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);cursor:pointer;z-index:20;box-shadow:0 4px 28px rgba(0,0,0,0.4);animation:stat-float 4.5s ease-in-out infinite}
 .stat-num{font-family:Georgia,serif;font-size:28px;color:#7B2D6A;font-weight:400;line-height:1;margin-bottom:2px;transition:color 0.4s}
@@ -396,7 +396,7 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
     <p class="sub-text" id="s1p" style="opacity:0">Tap the sparks in the tree to catch some insights on why recognition matters</p>
   </div>
   <div id="s1orbs"></div>
-  <div style="position:absolute;bottom:90px;left:50%;transform:translateX(-50%);text-align:center;z-index:60" id="s1foot">
+  <div style="position:absolute;text-align:center;z-index:60" id="s1foot">
     <p class="trans-text" id="s1trans">Now see what happens when the lights go out</p>
     <button class="glass-btn" id="s1cont" style="display:none;margin-top:12px" onclick="goToScreen(2)">Now see what happens when the lights go out →</button>
   </div>
@@ -636,10 +636,15 @@ function buildOrbs() {
   const r1TR = ((leftStart + rightOffset) / H * 100).toFixed(1) + '%';
   const r2TR = ((leftStart + rightOffset + vMargin + cardH) / H * 100).toFixed(1) + '%';
 
-  // Button: horizontal center between col1 and col2 midpoints
+  // Button: horizontal center between col1 and col2 midpoints, vertical below both columns
   const c1CenterPx = hMargin + cardW / 2;
   const c2CenterPx = hMargin * 2 + cardW + cardW / 2;
+  const leftColBottom  = leftStart + (vMargin + cardH) * 2 + cardH;
+  const rightColBottom = leftStart + rightOffset + (vMargin + cardH) + cardH;
+  const buttonTopPx = Math.max(leftColBottom, rightColBottom) + 24;
   const foot = document.getElementById('s1foot');
+  foot.style.top  = buttonTopPx + 'px';
+  foot.style.bottom = 'auto';
   foot.style.left = ((c1CenterPx + c2CenterPx) / 2) + 'px';
   foot.style.transform = 'translateX(-50%)';
 
@@ -687,8 +692,7 @@ function onOrbClick(i, thread, orb, cfg) {
   bubble.style.cssText = `position:absolute;left:${cfg.bLeft};top:${cfg.bTop};opacity:0;transform:translateY(8px)`;
   // Remove the bottom-pointing tail arrow (bubbles now use top positioning)
   bubble.innerHTML =
-    `<span class="b-emoji">${thread.emoji}</span>` +
-    `<div class="b-title">${thread.title}</div>` +
+    `<div class="b-header"><span class="b-emoji">${thread.emoji}</span><div class="b-title">${thread.title}</div></div>` +
     `<div class="b-text">${thread.text}</div>`;
   document.getElementById('s1orbs').appendChild(bubble);
   gsap.to(bubble, { opacity: 1, y: 0, duration: 0.38, ease: 'power2.out' });
