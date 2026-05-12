@@ -234,7 +234,7 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
   0%{transform:scale(1);opacity:0.7}
   100%{transform:scale(2.6);opacity:0}
 }
-.speech-bubble{position:absolute;background:rgba(255,255,255,0.88);border:1px solid rgba(180,100,160,0.35);border-radius:14px;padding:12px 15px;width:185px;z-index:30;pointer-events:none;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 4px 32px rgba(0,0,0,0.45)}
+.speech-bubble{position:absolute;background:rgba(255,255,255,0.88);border:1px solid rgba(180,100,160,0.35);border-radius:14px;padding:12px 15px;width:200px;z-index:30;pointer-events:none;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 4px 32px rgba(0,0,0,0.45)}
 .speech-bubble::after{content:'';position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:9px solid rgba(168,232,255,0.4)}
 .speech-bubble .b-emoji{font-size:20px;display:block;margin-bottom:6px}
 .speech-bubble .b-title{font-size:13px;font-weight:600;color:#9B3A7A;margin-bottom:5px}
@@ -617,11 +617,11 @@ function buildOrbs() {
 
   // Dots on crown (tree at left:67%, bottom:-14%); crown spans x≈52-82%, y≈35-65%
   const SPARK_CFG = [
-    { left:'67%', top:'45%', bLeft:'3%',  bTop:'28%' }, // crown top-centre → col1 row1
-    { left:'57%', top:'52%', bLeft:'3%',  bTop:'46%' }, // crown left       → col1 row2
-    { left:'77%', top:'51%', bLeft:'3%',  bTop:'64%' }, // crown right      → col1 row3
-    { left:'62%', top:'62%', bLeft:'22%', bTop:'37%' }, // crown mid-left   → col2 row1
-    { left:'73%', top:'60%', bLeft:'22%', bTop:'55%' }, // crown mid-right  → col2 row2
+    { left:'67%', top:'45%', bLeft:'2%',  bTop:'13%' }, // col1 row1
+    { left:'57%', top:'52%', bLeft:'2%',  bTop:'40%' }, // col1 row2
+    { left:'77%', top:'51%', bLeft:'2%',  bTop:'67%' }, // col1 row3
+    { left:'62%', top:'62%', bLeft:'21%', bTop:'13%' }, // col2 row1
+    { left:'73%', top:'60%', bLeft:'21%', bTop:'46%' }, // col2 row2
   ];
 
   COPY.s1.threads.forEach((thread, i) => {
