@@ -821,11 +821,14 @@ function initS3() {
 
 function repositionS3Cols() {
   const dz = document.getElementById('dropZone').getBoundingClientRect();
+  const W = window.innerWidth;
   const cardW = 160;
-  const leftCenter  = dz.left / 2;
-  const rightCenter = dz.right + (window.innerWidth - dz.right) / 2;
-  document.getElementById('s3ColLeft').style.left  = Math.max(8, leftCenter  - cardW / 2) + 'px';
-  document.getElementById('s3ColRight').style.left = (rightCenter - cardW / 2) + 'px';
+  const leftX  = Math.max(8, dz.left / 2 - cardW / 2);
+  // Place right col at 25% into right gap (closer to tree center, not at far edge)
+  const rightCenter = dz.right + (W - dz.right) * 0.25;
+  const rightX = Math.max(dz.right + 12, rightCenter - cardW / 2);
+  document.getElementById('s3ColLeft').style.left  = leftX + 'px';
+  document.getElementById('s3ColRight').style.left = rightX + 'px';
   document.getElementById('s3ColRight').style.right = 'auto';
 }
 
