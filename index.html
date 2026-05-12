@@ -625,25 +625,33 @@ function buildOrbs() {
   const c1L = (hMargin / W * 100).toFixed(1) + '%';
   const c2L = ((hMargin * 2 + cardW) / W * 100).toFixed(1) + '%';
 
-  // Vertical: 3 rows centered between header (~16%) and footer (~15%)
+  // Vertical: 3 rows (left col) centered between header and footer
   const headerH = H * 0.16, footerH = H * 0.15;
-  const usable = H - headerH - footerH;
+  const usable  = H - headerH - footerH;
   const vMargin = Math.max(20, (usable - 3 * cardH) / 4);
-  const r1T = ((headerH + vMargin) / H * 100).toFixed(1) + '%';
-  const r2T = ((headerH + vMargin * 2 + cardH) / H * 100).toFixed(1) + '%';
-  const r3T = ((headerH + vMargin * 3 + cardH * 2) / H * 100).toFixed(1) + '%';
+  const leftStart = headerH + vMargin;
+  const r1T = (leftStart / H * 100).toFixed(1) + '%';
+  const r2T = ((leftStart + vMargin + cardH) / H * 100).toFixed(1) + '%';
+  const r3T = ((leftStart + (vMargin + cardH) * 2) / H * 100).toFixed(1) + '%';
 
-  // Center s1foot button in left space
+  // Right col (2 cards): vertically centered relative to left col span
+  const rightOffset = (vMargin + cardH) / 2;
+  const r1TR = ((leftStart + rightOffset) / H * 100).toFixed(1) + '%';
+  const r2TR = ((leftStart + rightOffset + vMargin + cardH) / H * 100).toFixed(1) + '%';
+
+  // Button: horizontal center between col1 and col2 midpoints
+  const c1CenterPx = hMargin + cardW / 2;
+  const c2CenterPx = hMargin * 2 + cardW + cardW / 2;
   const foot = document.getElementById('s1foot');
-  foot.style.left = (treeLeft / 2) + 'px';
+  foot.style.left = ((c1CenterPx + c2CenterPx) / 2) + 'px';
   foot.style.transform = 'translateX(-50%)';
 
   const SPARK_CFG = [
-    { left:'67%', top:'45%', bLeft: c1L, bTop: r1T },
-    { left:'57%', top:'52%', bLeft: c1L, bTop: r2T },
-    { left:'77%', top:'51%', bLeft: c1L, bTop: r3T },
-    { left:'62%', top:'62%', bLeft: c2L, bTop: r1T },
-    { left:'73%', top:'60%', bLeft: c2L, bTop: r2T },
+    { left:'67%', top:'45%', bLeft: c1L, bTop: r1T  },
+    { left:'57%', top:'52%', bLeft: c1L, bTop: r2T  },
+    { left:'77%', top:'51%', bLeft: c1L, bTop: r3T  },
+    { left:'62%', top:'62%', bLeft: c2L, bTop: r1TR },
+    { left:'73%', top:'60%', bLeft: c2L, bTop: r2TR },
   ];
 
   COPY.s1.threads.forEach((thread, i) => {
