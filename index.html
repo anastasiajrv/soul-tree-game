@@ -273,6 +273,7 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 .mote{position:fixed;pointer-events:none;width:6px;height:6px;border-radius:50%;background:#FFD070;box-shadow:0 0 8px rgba(255,200,80,0.7);z-index:500}
 
 /* ── Badge cards: closed (click to open) ── */
+#s3ColLeft,#s3ColRight{transition:top 0.4s ease}
 .badge-s3{width:178px;background:rgba(255,255,255,0.82);border:1px solid rgba(180,100,160,0.22);border-radius:12px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,0.45);flex-shrink:0;transition:box-shadow .3s,border-color .3s,height .4s ease;animation:badge-idle-float 4.8s ease-in-out infinite}
 .badge-s3.closed{cursor:pointer;height:95px}
 .badge-s3.closed:hover{border-color:rgba(168,232,255,0.45);box-shadow:0 3px 28px rgba(168,232,255,0.22)}
@@ -837,24 +838,27 @@ function initS3() {
 function repositionS3Cols() {
   const dz = document.getElementById('dropZone').getBoundingClientRect();
   const W = window.innerWidth, H = window.innerHeight;
-  const cardW = 178, cardH = 95, gap = 10;
+  const cardW = 178, closedH = 95, openH = 178, gap = 10;
 
   // Horizontal: center each column in its gap (left of tree, right of tree)
   const leftX  = Math.max(8, dz.left / 2 - cardW / 2);
   const rightCenter = dz.right + (W - dz.right) * 0.25;
   const rightX = Math.max(dz.right + 12, rightCenter - cardW / 2);
 
-  // Vertical: center each column independently in usable height
+  // Vertical: center each column based on actual open/closed mix
+  const leftEl  = document.getElementById('s3ColLeft');
+  const rightEl = document.getElementById('s3ColRight');
+  const leftOpenN  = leftEl.querySelectorAll('.badge-s3.open').length;
+  const rightOpenN = rightEl.querySelectorAll('.badge-s3.open').length;
+  const leftColH  = leftOpenN  * openH  + (4 - leftOpenN)  * closedH + 3 * gap;
+  const rightColH = rightOpenN * openH  + (3 - rightOpenN) * closedH + 2 * gap;
+
   const headerH = H * 0.18;
   const footerH = H * 0.08;
   const usable  = H - headerH - footerH;
-  const leftColH  = 4 * cardH + 3 * gap;
-  const rightColH = 3 * cardH + 2 * gap;
   const leftTop  = Math.max(headerH, headerH + (usable - leftColH)  / 2);
   const rightTop = Math.max(headerH, headerH + (usable - rightColH) / 2);
 
-  const leftEl  = document.getElementById('s3ColLeft');
-  const rightEl = document.getElementById('s3ColRight');
   leftEl.style.left = leftX + 'px';
   leftEl.style.top  = leftTop + 'px';
   rightEl.style.left  = rightX + 'px';
@@ -897,6 +901,7 @@ function openS3Badge(card, badge) {
   if (!card.classList.contains('closed')) return;
   card.classList.remove('closed');
   card.classList.add('open');
+  repositionS3Cols();
 
   s3OpenCount++;
 
