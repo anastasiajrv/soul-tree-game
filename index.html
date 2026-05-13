@@ -447,17 +447,13 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
 
   <!-- CTA top UI (after all dropped) -->
   <div class="ui-top" id="s3ctaUi" style="opacity:0;pointer-events:none">
-    <h2 class="serif" id="s3ctaH" style="opacity:0;font-size:clamp(16px,2.2vw,26px)">Someone on your team is waiting for their thread to glow</h2>
-    <p class="sub-text" id="s3ctaSub" style="opacity:0;font-size:13px">The new KUDOS are your way to tell them. Pick one, mean it, send it</p>
+    <h2 class="serif" id="s3ctaH" style="opacity:0;font-size:clamp(24px,3.4vw,44px)">Someone on your team is waiting for their thread to glow</h2>
+    <p class="sub-text" id="s3ctaSub" style="opacity:0;font-size:clamp(14px,1.5vw,18px)">The new KUDOS are your way to tell them. Pick one, mean it, send it</p>
   </div>
 
-  <!-- Step cards (after all dropped) -->
-  <div id="s3steps" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;z-index:50;margin-top:20px;opacity:0;pointer-events:none"></div>
-
   <!-- Final CTA button (after all dropped) -->
-  <div id="s3cta" style="position:absolute;bottom:80px;left:50%;transform:translateX(-50%);text-align:center;z-index:60;opacity:0;pointer-events:none">
+  <div id="s3cta" style="position:absolute;left:50%;transform:translateX(-50%);text-align:center;z-index:60;opacity:0;pointer-events:none">
     <button class="gold-btn" id="s3btn" onclick="finalBurst3()">Light up the tree →</button>
-    <p id="s3close" style="font-size:12px;color:rgba(240,237,230,0.45);margin-top:14px;opacity:0">The tree glows when we tend to it. Let's not go quiet again.</p>
   </div>
 
 </div>
@@ -711,6 +707,18 @@ function onOrbClick(i, thread, orb, cfg) {
   // All 5 tapped → show continue button
   if (s1Visited.size === COPY.s1.threads.length) {
     setTimeout(() => {
+      // Reposition button horizontally based on actual rendered card positions
+      const bubbles = document.querySelectorAll('#s1orbs .speech-bubble');
+      let minLeft = Infinity, maxRight = -Infinity;
+      bubbles.forEach(b => {
+        const r = b.getBoundingClientRect();
+        minLeft = Math.min(minLeft, r.left);
+        maxRight = Math.max(maxRight, r.right);
+      });
+      if (isFinite(minLeft) && isFinite(maxRight)) {
+        document.getElementById('s1foot').style.left = ((minLeft + maxRight) / 2) + 'px';
+      }
+
       const cont = document.getElementById('s1cont');
       cont.style.display = 'inline-block';
       gsap.fromTo(cont, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.2 });
@@ -824,7 +832,7 @@ function initS3() {
 
   gsap.set('#tree3-dark',   { opacity: 1, filter: 'brightness(0.38)' });
   gsap.set('#tree3-bright', { opacity: 0 });
-  gsap.set(['#s3ctaUi','#s3steps','#s3cta'], { opacity: 0, pointerEvents: 'none' });
+  gsap.set(['#s3ctaUi','#s3cta'], { opacity: 0, pointerEvents: 'none' });
   gsap.set('#s3dragHint', { opacity: 0 });
   document.getElementById('s3steps').innerHTML = '';
 
@@ -1061,24 +1069,25 @@ function triggerS3TreeReveal() {
 
 function initS3UI() {
   const ctaUi = document.getElementById('s3ctaUi');
-  const steps  = document.getElementById('s3steps');
-  const cta    = document.getElementById('s3cta');
+  const cta   = document.getElementById('s3cta');
 
   gsap.to('#s3ui', { opacity: 0, duration: 0.4 });
 
   ctaUi.style.pointerEvents = 'all';
-  steps.style.pointerEvents = 'all';
   cta.style.pointerEvents   = 'all';
+
+  // Position button vertically centered between header bottom and tree canopy top
+  const tree = document.getElementById('tree3-bright').getBoundingClientRect();
+  const H = window.innerHeight;
+  const headerBottom = H * 0.2;
+  const treeTop = tree.top;
+  cta.style.top = ((headerBottom + treeTop) / 2) + 'px';
 
   gsap.to(ctaUi,       { opacity: 1, duration: 0.7 });
   gsap.to('#s3ctaH',   { opacity: 1, duration: 0.8, delay: 0.15 });
   gsap.to('#s3ctaSub', { opacity: 1, duration: 0.8, delay: 0.4  });
-
-  buildS3Steps();
-  gsap.to(steps,      { opacity: 1, duration: 0.6, delay: 0.5 });
-  gsap.to(cta,        { opacity: 1, duration: 0.7, delay: 1.0 });
-  gsap.to('#s3btn',   { opacity: 1, duration: 0.7, delay: 1.0 });
-  gsap.to('#s3close', { opacity: 1, duration: 0.7, delay: 1.3 });
+  gsap.to(cta,         { opacity: 1, duration: 0.7, delay: 0.7 });
+  gsap.to('#s3btn',    { opacity: 1, duration: 0.7, delay: 0.7 });
 }
 
 function buildS3Steps() {
