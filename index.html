@@ -370,6 +370,8 @@ h2.serif{font-family:Georgia,serif;font-size:clamp(18px,2.8vw,32px);font-weight:
   </div>
 </div>
 
+<audio id="bgMusic" src="music.m4a" loop preload="auto"></audio>
+
 <div class="progress-dots" id="progressDots" style="opacity:0">
   <div class="dot active" id="d0"></div>
   <div class="dot" id="d1"></div>
@@ -571,6 +573,10 @@ function initIntro() {
 }
 
 function startGame() {
+  const music = document.getElementById('bgMusic');
+  music.volume = 0.45;
+  music.play().catch(() => {});
+
   const intro = document.getElementById('sIntro');
   gsap.to(intro, {
     opacity: 0, duration: 0.55, ease: 'power2.in',
