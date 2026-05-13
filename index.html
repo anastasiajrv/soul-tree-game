@@ -605,13 +605,21 @@ function initS1() {
 }
 
 function buildOrbs() {
+  // Ensure tree image is loaded before calculating positions from its bounding rect
+  const treeImg = document.querySelector('#tree1 img');
+  if (treeImg && !treeImg.complete) {
+    treeImg.addEventListener('load', buildOrbs, { once: true });
+    return;
+  }
+
   const container = document.getElementById('s1orbs');
   container.innerHTML = '';
 
   // Dynamic layout: center columns in space left of tree, center rows vertically
   const tree = document.getElementById('tree1').getBoundingClientRect();
   const W = window.innerWidth, H = window.innerHeight;
-  const treeLeft = tree.left;
+  // If tree width is 0 (image not rendered), fallback: tree center at 67%, assume ~28% width
+  const treeLeft = tree.width > 0 ? tree.left : W * 0.67 - H * 0.80 * 0.45 / 2;
   const cardW = 200, cardH = 160;
 
   // Horizontal: 2 columns with equal margins in [0, treeLeft]
